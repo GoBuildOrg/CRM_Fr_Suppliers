@@ -1,0 +1,485 @@
+// GoBuild CRM - Complete Database Schema
+// PostgreSQL Database Schema for Construction Material Suppliers CRM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum UserRole {
+  SUPPLIER_ADMIN
+  SALES_MANAGER
+}
+
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  PROPOSAL
+  NEGOTIATION
+  WON
+  LOST
+}
+
+enum ActivityType {
+  CALL
+  EMAIL
+  MEETING
+  SITE_VISIT
+  NOTE
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+}
+
+enum NotificationType {
+  LEAD_ASSIGNED
+  FOLLOW_UP_DUE
+  QUOTATION_SENT
+  ORDER_RECEIVED
+  LOW_STOCK
+  PAYMENT_RECEIVED
+}
+
+// ============================================
+// USER & COMPANY MODELS
+// ============================================
+
+model User {
+  id                String            @id @default(cuid())
+  email             String            @unique
+  password          String?           // Nullable for OAuth users
+  name              String
+  role              UserRole          @default(SALES_MANAGER)
+  image             String?
+  phone             String?
+  
+  // Relations
+  supplierCompanyId String?
+  supplierCompany   SupplierCompany?  @relation(fields: [supplierCompanyId], references: [id], onDelete: Cascade)
+  
+  // Activity tracking
+  leads             Lead[]            @relation("LeadAssignedTo")
+  activities        LeadActivity[]
+  quotations        Quotation[]
+  orders            Order[]
+  notifications     Notification[]
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  @@index([email])
+  @@index([supplierCompanyId])
+  @@map("users")
+}
+
+model SupplierCompany {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  address     String?
+  city        String?
+  state       String?
+  pincode     String?
+  gstNumber   String?       @unique
+  status      CompanyStatus @default(ACTIVE)
+  
+  // Relations
+  users       User[]
+  inventory   InventoryItem[]
+  quotations  Quotation[]
+  orders      Order[]
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@index([email])
+  @@index([gstNumber])
+  @@map("supplier_companies")
+}
+
+model CustomerCompany {
+  id              String   @id @default(cuid())
+  name            String
+  email           String?
+  phone           String
+  contactPerson   String
+  address         String?
+  city            String?
+  state           String?
+  pincode         String?
+  gstNumber       String?  @unique
+  
+  // Relations
+  leads           Lead[]
+  quotations      Quotation[]
+  orders          Order[]
+  siteAddresses   SiteAddress[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([phone])
+  @@index([email])
+  @@index([gstNumber])
+  @@map("customer_companies")
+}
+
+// ============================================
+// LEAD MANAGEMENT
+// ============================================
+
+model Lead {
+  id                String            @id @default(cuid())
+  title             String
+  description       String?
+  status            LeadStatus        @default(NEW)
+  estimatedValue    Float?
+  probability       Int?              // 0-100
+  expectedCloseDate DateTime?
+  source            String?           // e.g., "Website", "Referral", "Cold Call"
+  
+  // Relations
+  customerCompanyId String
+  customerCompany   CustomerCompany   @relation(fields: [customerCompanyId], references: [id], onDelete: Cascade)
+  
+  assignedToId      String?
+  assignedTo        User?             @relation("LeadAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  
+  siteAddressId     String?
+  siteAddress       SiteAddress?      @relation(fields: [siteAddressId], references: [id], onDelete: SetNull)
+  
+  activities        LeadActivity[]
+  quotations        Quotation[]
+  orders            Order[]
+  
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  @@index([status])
+  @@index([customerCompanyId])
+  @@index([assignedToId])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+model LeadActivity {
+  id          String       @id @default(cuid())
+  type        ActivityType
+  title       String
+  description String?
+  scheduledAt DateTime?    // For planned activities
+  completedAt DateTime?    // When activity was completed
+  
+  // Relations
+  leadId      String
+  lead        Lead         @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  @@index([leadId])
+  @@index([userId])
+  @@index([scheduledAt])
+  @@map("lead_activities")
+}
+
+// ============================================
+// QUOTATION MANAGEMENT
+// ============================================
+
+model Quotation {
+  id                  String           @id @default(cuid())
+  quotationNumber     String           @unique
+  title               String
+  description         String?
+  status              QuotationStatus  @default(DRAFT)
+  validUntil          DateTime
+  
+  // Pricing
+  subtotal            Float            @default(0)
+  taxPercent          Float            @default(0)
+  taxAmount           Float            @default(0)
+  discount            Float            @default(0)
+  total               Float            @default(0)
+  
+  // Terms & Conditions
+  terms               String?
+  notes               String?
+  
+  // Relations
+  supplierCompanyId   String
+  supplierCompany     SupplierCompany  @relation(fields: [supplierCompanyId], references: [id], onDelete: Cascade)
+  
+  customerCompanyId   String
+  customerCompany     CustomerCompany  @relation(fields: [customerCompanyId], references: [id], onDelete: Cascade)
+  
+  leadId              String?
+  lead                Lead?            @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  
+  createdById         String
+  createdBy           User             @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  
+  items               QuotationItem[]
+  orders              Order[]
+  
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  
+  @@index([quotationNumber])
+  @@index([status])
+  @@index([customerCompanyId])
+  @@index([supplierCompanyId])
+  @@index([leadId])
+  @@index([createdAt])
+  @@map("quotations")
+}
+
+model QuotationItem {
+  id            String     @id @default(cuid())
+  itemName      String
+  description   String?
+  quantity      Float
+  unit          String     // e.g., "ton", "bag", "cubic meter"
+  unitPrice     Float
+  total         Float
+  
+  // Relations
+  quotationId   String
+  quotation     Quotation  @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  
+  inventoryId   String?
+  inventory     InventoryItem? @relation(fields: [inventoryId], references: [id], onDelete: SetNull)
+  
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  @@index([quotationId])
+  @@index([inventoryId])
+  @@map("quotation_items")
+}
+
+// ============================================
+// INVENTORY MANAGEMENT
+// ============================================
+
+model InventoryItem {
+  id                String          @id @default(cuid())
+  sku               String          @unique
+  name              String
+  description       String?
+  category          String          // e.g., "Cement", "Steel", "Sand"
+  
+  // Images (NEW)
+  images            String[]        @default([])  // Array of image URLs
+  primaryImage      String?         // Main product image URL
+  
+  // Shop Page (NEW)
+  isVisibleOnShop   Boolean         @default(false)
+  shortDescription  String?         // Brief description for shop listing
+  brand             String?         // Material brand/manufacturer
+  specifications    String?         // JSON string for technical specs
+  
+  // Stock
+  currentStock      Float           @default(0)
+  unit              String          // e.g., "ton", "bag", "cubic meter"
+  minStockLevel     Float           @default(0)
+  maxStockLevel     Float?
+  
+  // Pricing
+  costPrice         Float           @default(0)
+  sellingPrice      Float           @default(0)
+  
+  // Relations
+  supplierCompanyId String
+  supplierCompany   SupplierCompany @relation(fields: [supplierCompanyId], references: [id], onDelete: Cascade)
+  
+  quotationItems    QuotationItem[]
+  orderItems        OrderItem[]
+  
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@index([sku])
+  @@index([category])
+  @@index([supplierCompanyId])
+  @@index([currentStock])
+  @@index([isVisibleOnShop])
+  @@map("inventory_items")
+}
+
+// ============================================
+// ORDER MANAGEMENT
+// ============================================
+
+model Order {
+  id                  String          @id @default(cuid())
+  orderNumber         String          @unique
+  status              OrderStatus     @default(PENDING)
+  paymentStatus       PaymentStatus   @default(PENDING)
+  
+  // Pricing (copied from quotation or set manually)
+  subtotal            Float           @default(0)
+  taxPercent          Float           @default(0)
+  taxAmount           Float           @default(0)
+  discount            Float           @default(0)
+  total               Float           @default(0)
+  paidAmount          Float           @default(0)
+  
+  // Delivery
+  deliveryDate        DateTime?
+  deliveryAddress     String?
+  deliveryNotes       String?
+  
+  // Relations
+  supplierCompanyId   String
+  supplierCompany     SupplierCompany @relation(fields: [supplierCompanyId], references: [id], onDelete: Cascade)
+  
+  customerCompanyId   String
+  customerCompany     CustomerCompany @relation(fields: [customerCompanyId], references: [id], onDelete: Cascade)
+  
+  leadId              String?
+  lead                Lead?           @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  
+  quotationId         String?
+  quotation           Quotation?      @relation(fields: [quotationId], references: [id], onDelete: SetNull)
+  
+  siteAddressId       String?
+  siteAddress         SiteAddress?    @relation(fields: [siteAddressId], references: [id], onDelete: SetNull)
+  
+  createdById         String
+  createdBy           User            @relation(fields: [createdById], references: [id], onDelete: Cascade)
+  
+  items               OrderItem[]
+  
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+  
+  @@index([orderNumber])
+  @@index([status])
+  @@index([paymentStatus])
+  @@index([customerCompanyId])
+  @@index([supplierCompanyId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id            String         @id @default(cuid())
+  itemName      String
+  description   String?
+  quantity      Float
+  unit          String
+  unitPrice     Float
+  total         Float
+  
+  // Relations
+  orderId       String
+  order         Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  
+  inventoryId   String?
+  inventory     InventoryItem? @relation(fields: [inventoryId], references: [id], onDelete: SetNull)
+  
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  
+  @@index([orderId])
+  @@index([inventoryId])
+  @@map("order_items")
+}
+
+// ============================================
+// SITE ADDRESS
+// ============================================
+
+model SiteAddress {
+  id                String          @id @default(cuid())
+  name              String          // e.g., "Main Construction Site"
+  address           String
+  city              String
+  state             String
+  pincode           String
+  contactPerson     String?
+  contactPhone      String?
+  
+  // Relations
+  customerCompanyId String
+  customerCompany   CustomerCompany @relation(fields: [customerCompanyId], references: [id], onDelete: Cascade)
+  
+  leads             Lead[]
+  orders            Order[]
+  
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  
+  @@index([customerCompanyId])
+  @@map("site_addresses")
+}
+
+// ============================================
+// NOTIFICATIONS
+// ============================================
+
+model Notification {
+  id          String           @id @default(cuid())
+  type        NotificationType
+  title       String
+  message     String
+  read        Boolean          @default(false)
+  
+  // Relations
+  userId      String
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Optional links to related entities
+  leadId      String?
+  orderId     String?
+  quotationId String?
+  
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  
+  @@index([userId])
+  @@index([read])
+  @@index([createdAt])
+  @@map("notifications")
+}
