@@ -13,6 +13,7 @@ import {
     Bell,
     Settings,
     TrendingUp,
+    Brain,
 } from "lucide-react";
 
 const navigation = [
@@ -20,6 +21,11 @@ const navigation = [
         name: "Dashboard",
         href: "/dashboard",
         icon: LayoutDashboard,
+    },
+    {
+        name: "Vishnu",
+        href: "/vishnu",
+        icon: Brain,
     },
     {
         name: "Leads",
