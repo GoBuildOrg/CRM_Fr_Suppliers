@@ -175,7 +175,7 @@ export async function createCustomer(data: CreateCustomerInput) {
     }
 
     const customer = await prisma.customerCompany.create({
-        data: validatedData,
+        data: validatedData as any,
     });
 
     revalidatePath("/customers");
@@ -260,7 +260,7 @@ export async function addSiteAddress(data: AddSiteAddressInput) {
     const validatedData = addSiteAddressSchema.parse(data);
 
     const siteAddress = await prisma.siteAddress.create({
-        data: validatedData,
+        data: validatedData as any,
     });
 
     revalidatePath("/customers");

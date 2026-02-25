@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
 
         let text: string;
         try {
-            text = await extractText(filePath, fileType);
+            text = (await extractText(filePath, fileType)) as string;
             console.log('[Vishnu Upload] ✅ STEP 4 COMPLETE: Text extracted');
             console.log('[Vishnu Upload] Text length:', text.length, 'characters');
             console.log('[Vishnu Upload] Text preview (first 200 chars):', text.substring(0, 200));
