@@ -18,7 +18,7 @@ export default async function ShopPage({
     );
 
     // Get unique categories
-    const categories = Array.from(new Set(items.map((item) => item.category)));
+    const categories = Array.from(new Set(items.map((item) => item.category))) as string[];
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -87,7 +87,7 @@ export default async function ShopPage({
                                     }
                                     className="cursor-pointer"
                                 >
-                                    {category}
+                                    {category as string}
                                 </Badge>
                             </Link>
                         ))}

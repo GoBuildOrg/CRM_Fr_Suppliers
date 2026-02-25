@@ -17,7 +17,7 @@ import { Loader2 } from "lucide-react";
 
 interface InventoryFormProps {
     mode: "create" | "edit";
-    initialData?: any;
+    initialData?: Record<string, any>;
 }
 
 const CATEGORIES = [
@@ -113,10 +113,10 @@ export function InventoryForm({ mode, initialData }: InventoryFormProps) {
 
             router.push("/inventory");
             router.refresh();
-        } catch (error: any) {
+        } catch (error: unknown) {
             toast({
                 title: "Error",
-                description: error.message || "Failed to save inventory item",
+                description: error instanceof Error ? error.message : "Failed to save inventory item",
                 variant: "destructive",
             });
         } finally {
