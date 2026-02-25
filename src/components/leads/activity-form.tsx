@@ -48,6 +48,7 @@ export function ActivityForm({ leadId }: ActivityFormProps) {
             await createActivity({
                 ...formData,
                 leadId,
+                type: formData.type as any,
             });
 
             toast({

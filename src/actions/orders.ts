@@ -161,7 +161,7 @@ export async function createOrder(data: CreateOrderInput) {
             total: validatedData.total,
             createdById: session.user.id,
             items: {
-                create: validatedData.items,
+                create: validatedData.items as any,
             },
         },
         include: {
@@ -204,10 +204,10 @@ export async function updateOrder(data: UpdateOrderInput) {
             ...(items && {
                 items: {
                     deleteMany: {},
-                    create: items,
+                    create: items as any,
                 },
             }),
-        },
+        } as any,
         include: {
             items: true,
         },

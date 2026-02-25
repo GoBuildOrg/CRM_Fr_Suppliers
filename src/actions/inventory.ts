@@ -172,7 +172,7 @@ export async function createInventoryItem(data: CreateInventoryItemInput) {
         data: {
             ...validatedData,
             supplierCompanyId: session.user.supplierCompanyId,
-        },
+        } as any,
     });
 
     revalidatePath("/inventory");
