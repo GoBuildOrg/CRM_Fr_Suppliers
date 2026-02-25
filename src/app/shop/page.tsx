@@ -76,7 +76,7 @@ export default async function ShopPage({
                         </Link>
                         {categories.map((category) => (
                             <Link
-                                key={category}
+                                key={category as string}
                                 href={`/shop?category=${category}`}
                             >
                                 <Badge
