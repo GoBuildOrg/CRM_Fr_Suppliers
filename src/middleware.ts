@@ -8,7 +8,7 @@ const DEV_BYPASS_AUTH = true;
 export async function middleware(request: NextRequest) {
     // BYPASS MODE: Allow all routes when database is not available
     if (DEV_BYPASS_AUTH) {
-        console.log("⚠️  AUTH BYPASSED - Development mode, no database required");
+        console.log("AUTH BYPASSED - Development mode, no database required");
         return NextResponse.next();
     }
 
