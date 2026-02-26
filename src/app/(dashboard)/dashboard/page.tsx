@@ -16,6 +16,7 @@ import {
     DollarSign,
     AlertTriangle,
     Target,
+    Info,
 } from "lucide-react";
 
 export default async function DashboardPage() {
@@ -34,6 +35,17 @@ export default async function DashboardPage() {
                 <p className="text-muted-foreground">
                     Welcome back! Here&apos;s what&apos;s happening with your business today.
                 </p>
+            </div>
+
+            {/* Demo Mode Banner */}
+            <div className="rounded-lg border border-yellow-300 bg-yellow-50 p-4 flex items-start gap-3">
+                <Info className="h-5 w-5 text-yellow-700 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                    <h3 className="font-semibold text-yellow-900">Demo Mode Active</h3>
+                    <p className="text-sm text-yellow-800 mt-1">
+                        You are currently viewing the CRM in demo mode. Some services and features are not available in this mode. For full access to all features and services, please contact the administrator.
+                    </p>
+                </div>
             </div>
 
             {/* Stats Cards */}
