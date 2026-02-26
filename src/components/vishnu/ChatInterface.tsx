@@ -72,8 +72,8 @@ export function ChatInterface() {
 
             const data = await response.json();
 
-            const documentSources = data.sources?.documents?.map((s: any) => s.fileName) || [];
-            const knowledgeSources = data.sources?.knowledge?.map((s: any) => s.category) || [];
+            const documentSources = (data.sources?.documents as Array<{fileName: string}> | undefined)?.map((s) => s.fileName) || [];
+            const knowledgeSources = (data.sources?.knowledge as Array<{category: string}> | undefined)?.map((s) => s.category) || [];
             const allSources = [...documentSources, ...knowledgeSources];
 
             const aiMessage: Message = {

@@ -12,7 +12,7 @@ export async function extractText(filePath: string, fileType: string) {
         const extract = require("pdf-text-extract");
 
         return new Promise((resolve, reject) => {
-            extract(filePath, (err: any, pages: string[]) => {
+            extract(filePath, (err: Error | null, pages: string[]) => {
                 if (err) {
                     reject(err);
                     return;

@@ -20,7 +20,7 @@ import { Loader2 } from "lucide-react";
 interface LeadFormProps {
     customers: Array<{ id: string; name: string }>;
     teamMembers: Array<{ id: string; name: string }>;
-    initialData?: any;
+    initialData?: Record<string, any>;
 }
 
 export function LeadForm({ customers, teamMembers, initialData }: LeadFormProps) {

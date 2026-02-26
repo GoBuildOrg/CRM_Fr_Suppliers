@@ -42,7 +42,7 @@ export default async function InventoryDetailsPage({
     const profitPerUnit = item.sellingPrice - item.costPrice;
 
     // Parse specifications if available
-    let specs = {};
+    let specs: Record<string, any> = {};
     try {
         specs = item.specifications ? JSON.parse(item.specifications) : {};
     } catch (e) {

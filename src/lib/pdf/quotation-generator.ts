@@ -1,4 +1,4 @@
-export async function generateQuotationPDF(quotation: any): Promise<string> {
+export async function generateQuotationPDF(quotation: Record<string, any>): Promise<string> {
     // Simple HTML-based PDF generation (can be enhanced with jsPDF or pdfmake)
     const html = `
 <!DOCTYPE html>
@@ -132,7 +132,7 @@ export async function generateQuotationPDF(quotation: any): Promise<string> {
         </tr>
       </thead>
       <tbody>
-        ${quotation.items.map((item: any, index: number) => `
+        ${quotation.items.map((item: Record<string, any>, index: number) => `
           <tr>
             <td>${index + 1}</td>
             <td>
