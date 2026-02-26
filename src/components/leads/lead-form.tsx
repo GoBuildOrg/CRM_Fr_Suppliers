@@ -85,7 +85,7 @@ export function LeadForm({ customers, teamMembers, initialData }: LeadFormProps)
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-2 max-w-2xl">
                 {/* Title */}
                 <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="title">Lead Title *</Label>
@@ -122,29 +122,6 @@ export function LeadForm({ customers, teamMembers, initialData }: LeadFormProps)
                     </Select>
                 </div>
 
-                {/* Assigned To */}
-                <div className="space-y-2">
-                    <Label htmlFor="assignedTo">Assigned To</Label>
-                    <Select
-                        value={formData.assignedToId}
-                        onValueChange={(value) =>
-                            setFormData({ ...formData, assignedToId: value })
-                        }
-                        disabled={isLoading}
-                    >
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select team member" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {teamMembers.map((member) => (
-                                <SelectItem key={member.id} value={member.id}>
-                                    {member.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
                 {/* Status */}
                 <div className="space-y-2">
                     <Label htmlFor="status">Status *</Label>
@@ -168,18 +145,6 @@ export function LeadForm({ customers, teamMembers, initialData }: LeadFormProps)
                             <SelectItem value="LOST">Lost</SelectItem>
                         </SelectContent>
                     </Select>
-                </div>
-
-                {/* Source */}
-                <div className="space-y-2">
-                    <Label htmlFor="source">Source</Label>
-                    <Input
-                        id="source"
-                        value={formData.source}
-                        onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                        placeholder="Website, Referral, Cold Call"
-                        disabled={isLoading}
-                    />
                 </div>
 
                 {/* Estimated Value */}
@@ -236,11 +201,9 @@ export function LeadForm({ customers, teamMembers, initialData }: LeadFormProps)
                     <Textarea
                         id="description"
                         value={formData.description}
-                        onChange={(e) =>
-                            setFormData({ ...formData, description: e.target.value })
-                        }
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                         placeholder="Additional details about this lead..."
-                        rows={4}
+                        rows={3}
                         disabled={isLoading}
                     />
                 </div>

@@ -70,7 +70,14 @@ export async function getQuotations(status?: string) {
 export async function getQuotationById(id: string) {
     const session = await getServerSession(authOptions);
 
+    // DEV MODE: Return mock data if no session
     if (!session?.user?.supplierCompanyId) {
+        const { mockQuotations } = await import("@/lib/mock-data");
+        const mockQuotation = mockQuotations.find((q) => q.id === id);
+        if (mockQuotation) {
+            console.log("💼 Returning mock quotation (no database)");
+            return mockQuotation;
+        }
         throw new Error("Unauthorized");
     }
 
