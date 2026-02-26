@@ -79,7 +79,7 @@ export function Sidebar() {
                             className="h-8 w-8 object-contain"
                         />
                     </div>
-                    <span className="font-bold text-xl">GoBuild CSM</span>
+                    <span className="font-bold text-xl">GoBuild CMS</span>
                 </div>
             </div>
             <nav className="flex-1 space-y-1 p-4">
