@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "GoBuild CSM - Construction Supply Management",
+    title: "GoBuild CMS - Construction Supply Management",
     description: "Complete supply management solution for construction material suppliers",
 };
 

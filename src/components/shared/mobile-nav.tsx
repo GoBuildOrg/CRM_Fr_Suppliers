@@ -39,7 +39,7 @@ export function MobileNav() {
                         alt="GoBuild Logo"
                         className="h-8 w-8 object-contain"
                     />
-                    <span className="font-bold text-lg">GoBuild CSM</span>
+                    <span className="font-bold text-lg">GoBuild CMS</span>
                 </div>
 
                 {/* Mobile Menu Toggle */}
@@ -59,7 +59,7 @@ export function MobileNav() {
                                         alt="GoBuild Logo"
                                         className="h-8 w-8 object-contain"
                                     />
-                                    <span className="font-bold text-xl">GoBuild CSM</span>
+                                    <span className="font-bold text-xl">GoBuild CMS</span>
                                 </div>
                             </div>
 
