@@ -148,7 +148,7 @@ export default function SettingsPage() {
                                             {item.type === "text" || item.type === "email" ? (
                                                 <Input
                                                     type={item.type}
-                                                    value={settings[item.key as keyof typeof settings]}
+                                                    value={String(settings[item.key as keyof typeof settings])}
                                                     onChange={(e) =>
                                                         handleChange(item.key, e.target.value)
                                                     }
@@ -156,7 +156,7 @@ export default function SettingsPage() {
                                                 />
                                             ) : item.type === "select" ? (
                                                 <select
-                                                    value={settings[item.key as keyof typeof settings]}
+                                                    value={String(settings[item.key as keyof typeof settings])}
                                                     onChange={(e) =>
                                                         handleChange(item.key, e.target.value)
                                                     }
