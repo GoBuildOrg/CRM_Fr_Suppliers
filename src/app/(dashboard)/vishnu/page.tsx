@@ -6,7 +6,7 @@ import { ChatInterface } from "@/components/vishnu/ChatInterface";
 import { DocumentList } from "@/components/vishnu/DocumentList";
 import { AgentStatus } from "@/components/vishnu/AgentStatus";
 import { motion } from "framer-motion";
-import { Brain, Menu, X } from "lucide-react";
+import { Heart, Menu, X } from "lucide-react";
 
 export default function VishnuPage() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -15,9 +15,9 @@ export default function VishnuPage() {
         <div className="h-[calc(100vh-8rem)] relative overflow-hidden">
             {/* Animated Background */}
             <div className="absolute inset-0 -z-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-violet-500/5 via-blue-500/5 to-cyan-500/5" />
-                <div className="absolute top-0 left-1/4 w-96 h-96 bg-violet-500/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 via-red-500/5 to-rose-500/5" />
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
             </div>
 
             {/* Header */}
@@ -28,15 +28,15 @@ export default function VishnuPage() {
                         animate={{ opacity: 1, y: 0 }}
                         className="flex items-center gap-3"
                     >
-                        <div className="p-3 rounded-2xl bg-gradient-to-br from-violet-500 to-blue-500">
-                            <Brain className="h-6 w-6 text-white" />
+                        <div className="p-3 rounded-2xl bg-gradient-to-br from-pink-500 to-red-500">
+                            <Heart className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
-                                Vishnu AI Assistant
+                            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
+                                HealthGuide AI
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Intelligent document analysis powered by RAG
+                                Your personal health advisor and medical expert
                             </p>
                         </div>
                     </motion.div>
@@ -104,22 +104,18 @@ export default function VishnuPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="mt-4 p-4 rounded-xl bg-gradient-to-r from-violet-500/10 to-blue-500/10 border border-violet-500/20"
+                className="mt-4 p-4 rounded-xl bg-gradient-to-r from-pink-500/10 to-red-500/10 border border-pink-500/20"
             >
                 <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-violet-500/20">
-                        <Brain className="h-4 w-4 text-violet-500" />
+                    <div className="p-2 rounded-lg bg-pink-500/20">
+                        <Heart className="h-4 w-4 text-pink-500" />
                     </div>
                     <div className="flex-1">
                         <p className="text-sm font-medium">
-                            🚀 Agentic Capabilities Coming Soon
+                            💚 Health AI Features Ready
                         </p>
                         <p className="text-xs text-muted-foreground mt-1">
-                            This UI is ready for RAG integration. See{" "}
-                            <code className="px-1.5 py-0.5 rounded bg-muted text-xs">
-                                VISHNU_AGENTIC_ROADMAP.md
-                            </code>{" "}
-                            for implementation steps.
+                            HealthGuide AI is ready to provide personalized health advice. Upload your health documents and ask health-related questions to get expert guidance.
                         </p>
                     </div>
                 </div>
