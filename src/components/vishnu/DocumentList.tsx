@@ -15,7 +15,7 @@ interface Document {
 const mockDocuments: Document[] = [
     {
         id: "1",
-        name: "Project Report Q4 2024.pdf",
+        name: "Health Report 2024.pdf",
         type: "pdf",
         size: 2457600,
         uploadedAt: new Date(Date.now() - 3600000),
@@ -23,7 +23,7 @@ const mockDocuments: Document[] = [
     },
     {
         id: "2",
-        name: "Sales Data Analysis.xlsx",
+        name: "Wellness Guidelines.xlsx",
         type: "xlsx",
         size: 1048576,
         uploadedAt: new Date(Date.now() - 7200000),
@@ -31,7 +31,7 @@ const mockDocuments: Document[] = [
     },
     {
         id: "3",
-        name: "Meeting Notes.txt",
+        name: "Medical Notes.txt",
         type: "txt",
         size: 15360,
         uploadedAt: new Date(Date.now() - 86400000),

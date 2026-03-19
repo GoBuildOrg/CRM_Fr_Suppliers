@@ -13,7 +13,7 @@ import {
     Bell,
     Settings,
     TrendingUp,
-    Brain,
+    Heart,
 } from "lucide-react";
 
 const navigation = [
@@ -23,9 +23,9 @@ const navigation = [
         icon: LayoutDashboard,
     },
     {
-        name: "Vishnu",
+        name: "HealthGuide",
         href: "/vishnu",
-        icon: Brain,
+        icon: Heart,
     },
     {
         name: "Leads",
