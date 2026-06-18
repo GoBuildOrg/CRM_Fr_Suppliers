@@ -13,11 +13,11 @@ interface Message {
 }
 
 const suggestedPrompts = [
-    "How do I manage suppliers in a construction CRM?",
-    "What's the typical quotation workflow?",
-    "Best practices for material tracking",
-    "How to track project milestones?",
-    "Explain the order management process",
+    "What are natural remedies for common cold?",
+    "How to maintain good mental health?",
+    "What are the benefits of regular exercise?",
+    "How to manage stress and anxiety?",
+    "Diet tips for healthy living",
 ];
 
 export function ChatInterface() {
@@ -25,8 +25,9 @@ export function ChatInterface() {
         {
             id: "welcome",
             role: "assistant",
-            content: "👋 Hello! I'm Vishnu, your intelligent construction CRM assistant. I can help you with:\n\n• Construction industry best practices\n• Supplier and project management\n• Quotation and estimation workflows\n• Material tracking and inventory\n• Document analysis (upload PDFs, text files, etc.)\n\nWhat would you like to know?",
+            content: "👋 Hello! I'm HealthGuide AI, your personal health and medical advisor. I can help you with:\n\n• General health and wellness advice\n• Fitness and exercise guidance\n• Mental health and stress management\n• Nutrition and diet recommendations\n• Common health conditions and remedies\n• Medication information and side effects\n• Preventive health care tips\n• Women's health, pregnancy, and reproductive health\n\nPlease note: I provide health information and guidance, but always consult with a qualified healthcare professional for diagnosis and treatment decisions.\n\nWhat would you like to know about?",
             timestamp: new Date(),
+            sources: [],
         }
     ]);
     const [input, setInput] = useState("");
@@ -90,7 +91,7 @@ export function ChatInterface() {
             const errorMessage: Message = {
                 id: (Date.now() + 1).toString(),
                 role: "assistant",
-                content: "I encountered an error processing your request. Please check:\n\n1. Your Pinecone API key is configured in .env.local\n2. Your OpenAI API key is configured\n3. The Pinecone index 'gobuild-crm-rag' exists\n\nError: " + (error instanceof Error ? error.message : 'Unknown error'),
+                content: "I encountered an error processing your request. Please check:\n\n1. Your Pinecone API key is configured in .env.local\n2. Your OpenAI API key is configured\n3. The Pinecone index is properly set up\n\nError: " + (error instanceof Error ? error.message : 'Unknown error'),
                 timestamp: new Date(),
             };
             setMessages(prev => [...prev, errorMessage]);
@@ -117,7 +118,7 @@ export function ChatInterface() {
                             className={`flex gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
                         >
                             {message.role === "assistant" && (
-                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-blue-500 flex items-center justify-center">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center">
                                     <Bot className="h-5 w-5 text-white" />
                                 </div>
                             )}
@@ -125,7 +126,7 @@ export function ChatInterface() {
                             <div className={`max-w-[80%] ${message.role === "user" ? "order-first" : ""}`}>
                                 <div
                                     className={`rounded-2xl px-4 py-3 ${message.role === "user"
-                                        ? "bg-gradient-to-br from-violet-500 to-blue-500 text-white"
+                                        ? "bg-gradient-to-br from-pink-500 to-red-500 text-white"
                                         : "bg-card/50 backdrop-blur-sm border border-border/50"
                                         }`}
                                 >
@@ -156,7 +157,7 @@ export function ChatInterface() {
                             </div>
 
                             {message.role === "user" && (
-                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center">
                                     <User className="h-5 w-5 text-white" />
                                 </div>
                             )}
@@ -235,7 +236,7 @@ export function ChatInterface() {
                                     handleSend();
                                 }
                             }}
-                            placeholder="Ask anything about your documents..."
+                            placeholder="Ask me about health, wellness, or medical advice..."
                             rows={1}
                             className="w-full px-4 py-3 pr-12 rounded-xl bg-background/50 border border-border/50 focus:border-primary/50 focus:outline-none resize-none transition-all"
                             style={{ minHeight: "48px", maxHeight: "120px" }}
@@ -247,7 +248,7 @@ export function ChatInterface() {
                         whileTap={{ scale: 0.95 }}
                         onClick={handleSend}
                         disabled={!input.trim() || isTyping}
-                        className="p-3 rounded-xl bg-gradient-to-br from-violet-500 to-blue-500 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                        className="p-3 rounded-xl bg-gradient-to-br from-pink-500 to-red-500 text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                     >
                         {isTyping ? (
                             <Loader2 className="h-5 w-5 animate-spin" />
@@ -258,7 +259,7 @@ export function ChatInterface() {
                 </div>
 
                 <p className="text-xs text-muted-foreground mt-2 text-center">
-                    Vishnu can make mistakes. Verify important information.
+                    HealthGuide AI provides health information for educational purposes. Always consult healthcare professionals for medical decisions.
                 </p>
             </div>
         </div>
